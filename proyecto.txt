@@ -1,0 +1,58 @@
+Actúa como un desarrollador senior JS/TS. Integra en el proyecto existente (React/Next.js/Vite o Vanilla + Vite) una app web que:
+
+1. Dependencias
+   - @mediapipe/tasks-vision (FaceLandmarker, HandLandmarker o GestureRecognizer).
+   - three y @pixiv/three-vrm para cargar y animar avatares VRM.
+   - kalidokit para convertir landmarks/blendshapes en rotaciones óseas y pesos de morph targets.
+
+2. Captura y Render
+   - Usa getUserMedia para el stream de webcam.
+   - Crea <video> y <canvas> (overlay de debug opcional).
+   - Loop con requestAnimationFrame (o Web Worker) para no bloquear el main thread.
+
+3. Face Tracking
+   - Inicializa FaceLandmarker con:
+     runningMode: "VIDEO", numFaces: 1,
+     outputFaceBlendshapes: true,
+     outputFacialTransformationMatrixes: true.
+   - Por frame, obtén { faceLandmarks, faceBlendshapes, matrices }.
+
+4. Hand / Gestos
+   - Inicializa HandLandmarker (o GestureRecognizer).
+   - Por frame, obtén landmarks de ambas manos.
+   - Detecta gesto “pinza” (distancia pulgar–índice < umbral) o usa el resultado de GestureRecognizer.
+   - Usa ese gesto para:
+     a) Navegar un carrusel/grid de avatares VRM.
+     b) Confirmar selección del avatar activo.
+
+5. Avatar VRM + Kalidokit
+   - Carga un VRM (URL configurable) con GLTFLoader + VRMLoaderPlugin (VRM.from).
+   - Mapea cada blendshape MediaPipe → VRM Expression/BlendShapeProxy (JSON de mapeo).
+   - Con Kalidokit.Face.solve(), transforma landmarks/blendshapes a:
+     - Rotaciones (cabeza, ojos, mandíbula).
+     - Pesos de expresiones (morph targets).
+   - Aplica cada frame:
+     vrm.humanoid.setBoneRotation(...)
+     vrm.expressionManager.setValue(name, weight)
+
+6. Arquitectura
+   - /tracking: lógica MediaPipe + Kalidokit (faceTracker, handTracker).
+   - /avatar: carga/control VRM y render Three.js.
+   - /utils: smoothing (EMA/Kalman), mapeos de blendshapes, helpers.
+   - Expón un hook o servicio (useAvatarRig / AvatarService) que sincronice tracking ↔ avatar.
+
+7. UX y Rendimiento
+   - Vídeo ≤ 640×480 para latencia baja.
+   - Botón/UI para recalibrar “pose neutra”.
+   - Panel de estado (FPS, latencia, avatar activo).
+   - Soporta cambio dinámico de avatar sin recargar la escena.
+
+8. Entregables
+   - Código completo y tipado en TS.
+   - README con:
+     - Cómo ejecutar y desplegar (Vercel/Netlify).
+     - Cómo reemplazar modelos VRM.
+     - JSON de mapeo de blendshapes (MediaPipe → VRM).
+   - Demo en /demo mostrando video, avatar y selección por gestos.
+
+Genera todo el código necesario (incluido el JSON de mapeo y la detección del gesto pinza), comenta las partes críticas y proporciona instrucciones claras para añadir nuevos gestos y avatares.

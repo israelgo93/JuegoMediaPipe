@@ -1,0 +1,194 @@
+{
+  "mediaPipeToVRM": {
+    "eyeBlinkLeft": "blink_l",
+    "eyeBlinkRight": "blink_r",
+    "eyeLookDownLeft": "lookDown_l",
+    "eyeLookDownRight": "lookDown_r",
+    "eyeLookInLeft": "lookIn_l",
+    "eyeLookInRight": "lookIn_r",
+    "eyeLookOutLeft": "lookOut_l",
+    "eyeLookOutRight": "lookOut_r",
+    "eyeLookUpLeft": "lookUp_l",
+    "eyeLookUpRight": "lookUp_r",
+    "eyeSquintLeft": "wink_l",
+    "eyeSquintRight": "wink_r",
+    "eyeWideLeft": "surprised",
+    "eyeWideRight": "surprised",
+    
+    "jawForward": "neutral",
+    "jawLeft": "neutral",
+    "jawRight": "neutral",
+    "jawOpen": "aa",
+    
+    "mouthClose": "neutral",
+    "mouthFunnel": "oh",
+    "mouthPucker": "oh",
+    "mouthLeft": "neutral",
+    "mouthRight": "neutral",
+    "mouthSmileLeft": "happy",
+    "mouthSmileRight": "happy",
+    "mouthFrownLeft": "sad",
+    "mouthFrownRight": "sad",
+    "mouthDimpleLeft": "happy",
+    "mouthDimpleRight": "happy",
+    "mouthStretchLeft": "happy",
+    "mouthStretchRight": "happy",
+    "mouthRollLower": "neutral",
+    "mouthRollUpper": "neutral",
+    "mouthShrugLower": "neutral",
+    "mouthShrugUpper": "neutral",
+    "mouthPressLeft": "neutral",
+    "mouthPressRight": "neutral",
+    "mouthLowerDownLeft": "sad",
+    "mouthLowerDownRight": "sad",
+    "mouthUpperUpLeft": "happy",
+    "mouthUpperUpRight": "happy",
+    
+    "browDownLeft": "angry",
+    "browDownRight": "angry",
+    "browInnerUp": "surprised",
+    "browOuterUpLeft": "surprised",
+    "browOuterUpRight": "surprised",
+    
+    "cheekPuff": "puff",
+    "cheekSquintLeft": "wink_l",
+    "cheekSquintRight": "wink_r",
+    
+    "noseSneerLeft": "angry",
+    "noseSneerRight": "angry",
+    
+    "tongueOut": "neutral"
+  },
+  
+  "vrmExpressionPresets": {
+    "aa": {
+      "description": "Expresión de boca abierta para sonido 'aa'",
+      "weight": 1.0
+    },
+    "ih": {
+      "description": "Expresión de boca para sonido 'ih'",
+      "weight": 1.0
+    },
+    "ou": {
+      "description": "Expresión de boca para sonido 'ou'",
+      "weight": 1.0
+    },
+    "ee": {
+      "description": "Expresión de boca para sonido 'ee'",
+      "weight": 1.0
+    },
+    "oh": {
+      "description": "Expresión de boca para sonido 'oh'",
+      "weight": 1.0
+    },
+    "blink": {
+      "description": "Parpadeo general",
+      "weight": 1.0
+    },
+    "blink_l": {
+      "description": "Parpadeo ojo izquierdo",
+      "weight": 1.0
+    },
+    "blink_r": {
+      "description": "Parpadeo ojo derecho",
+      "weight": 1.0
+    },
+    "happy": {
+      "description": "Expresión feliz/sonrisa",
+      "weight": 1.0
+    },
+    "angry": {
+      "description": "Expresión enojada",
+      "weight": 1.0
+    },
+    "sad": {
+      "description": "Expresión triste",
+      "weight": 1.0
+    },
+    "relaxed": {
+      "description": "Expresión relajada",
+      "weight": 1.0
+    },
+    "surprised": {
+      "description": "Expresión sorprendida",
+      "weight": 1.0
+    },
+    "wink": {
+      "description": "Guiño general",
+      "weight": 1.0
+    },
+    "wink_l": {
+      "description": "Guiño ojo izquierdo",
+      "weight": 1.0
+    },
+    "wink_r": {
+      "description": "Guiño ojo derecho",
+      "weight": 1.0
+    },
+    "lookUp": {
+      "description": "Mirar hacia arriba",
+      "weight": 1.0
+    },
+    "lookDown": {
+      "description": "Mirar hacia abajo",
+      "weight": 1.0
+    },
+    "lookLeft": {
+      "description": "Mirar hacia la izquierda",
+      "weight": 1.0
+    },
+    "lookRight": {
+      "description": "Mirar hacia la derecha",
+      "weight": 1.0
+    },
+    "neutral": {
+      "description": "Expresión neutral/base",
+      "weight": 0.0
+    }
+  },
+  
+  "kalidokitToVRM": {
+    "mouth.A": "aa",
+    "mouth.E": "ee",
+    "mouth.I": "ih",
+    "mouth.O": "oh",
+    "mouth.U": "ou",
+    "eye.l": "blink_l",
+    "eye.r": "blink_r",
+    "brow": "surprised"
+  },
+  
+  "expressionWeights": {
+    "default": {
+      "aa": 0.0,
+      "ih": 0.0,
+      "ou": 0.0,
+      "ee": 0.0,
+      "oh": 0.0,
+      "blink": 0.0,
+      "blink_l": 0.0,
+      "blink_r": 0.0,
+      "happy": 0.0,
+      "angry": 0.0,
+      "sad": 0.0,
+      "relaxed": 1.0,
+      "surprised": 0.0,
+      "wink": 0.0,
+      "wink_l": 0.0,
+      "wink_r": 0.0,
+      "lookUp": 0.0,
+      "lookDown": 0.0,
+      "lookLeft": 0.0,
+      "lookRight": 0.0,
+      "neutral": 1.0
+    }
+  },
+  
+  "smoothingSettings": {
+    "blinkSmoothing": 0.9,
+    "expressionSmoothing": 0.7,
+    "mouthSmoothing": 0.6,
+    "browSmoothing": 0.8,
+    "eyeMovementSmoothing": 0.5
+  }
+}

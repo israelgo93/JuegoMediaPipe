@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Avatar VRM - Fullscreen</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48dGV4dCB5PScuOWVtJyBmb250LXNpemU9JzkwJz7wn46tPC90ZXh0Pjwvc3ZnPg==">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .fullscreen-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        
+        .webcam-panel {
+            position: relative;
+            background: #111;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .avatar-panel {
+            position: relative;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+        
+        #webcam {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        
+        #output_canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        #vrm-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .controls-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn:disabled {
+            background: #222;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .control-btn.primary {
+            background: #007acc;
+        }
+        
+        .control-btn.primary:hover {
+            background: #0086e6;
+        }
+        
+        .status-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+        
+        .performance-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 20;
+            font-size: 16px;
+        }
+        
+        .calibration-helper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #00ff88;
+            font-size: 18px;
+            text-align: center;
+            z-index: 5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        @media (max-width: 768px) {
+            .fullscreen-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-container">
+        <!-- Panel de webcam con canvas de landmarks -->
+        <div class="webcam-panel">
+            <video id="webcam" autoplay muted playsinline></video>
+            <canvas id="output_canvas"></canvas>
+            
+            <div id="calibration-helper" class="calibration-helper" style="display: none;">
+                <div>Mantén tu cara centrada</div>
+                <div id="calibration-progress">Calibrando...</div>
+            </div>
+        </div>
+        
+        <!-- Panel del avatar VRM -->
+        <div class="avatar-panel">
+            <div id="vrm-container"></div>
+            
+            <div id="loading-indicator" class="loading-indicator" style="display: none;">
+                Cargando avatar...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Controles flotantes -->
+    <div class="controls-overlay">
+        <button id="start-btn" class="control-btn primary">Iniciar</button>
+        <button id="stop-btn" class="control-btn" disabled>Detener</button>
+        <button id="calibrate-btn" class="control-btn" disabled>Calibrar</button>
+    </div>
+    
+    <!-- Estadísticas de rendimiento -->
+    <div class="status-overlay">
+        <div class="performance-stats">
+            <div id="fps-counter">FPS: --</div>
+            <div id="latency-counter">Latencia: -- ms</div>
+            <div id="tracking-status">Estado: Detenido</div>
+        </div>
+    </div>
+    
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿  VITE v5.4.19  ready in 469 ms
+
+  ➜  Local:   http://localhost:5176/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+9:19:03 p. m. [vite] Internal server error: Unable to parse HTML; parse5 error code unexpected-character-in-attribute-name
+ at C:/Proyectos/CasaAbierta/JuegoMediaPipe/index.html:8:5
+6  |      <title>MediaPipe Avatar VRM - Fullscreen</title>
+7  |      <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>"
+8  |      <style>
+   |      ^
+9  |          * {
+10 |              margin: 0;
+   at C:/Proyectos/CasaAbierta/JuegoMediaPipe/index.html:8:5
+      at handleParseError (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:35172:9)
+      at Parser.onParseError (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:35097:7)
+      at Tokenizer._err (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:1155:89)
+      at Tokenizer._stateAttributeName (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:2547:22)
+      at Tokenizer._stateBeforeAttributeName (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:2519:22)
+      at Tokenizer._callState (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:1638:22)
+      at Tokenizer._runParsingLoop (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:1179:22)
+      at Tokenizer.write (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:1204:14)
+      at Parser.parse (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:4886:26)
+      at parse (file:///C:/Proyectos/CasaAbierta/JuegoMediaPipe/node_modules/vite/dist/node/chunks/dep-D-7KCb9p.js:7957:19)
