@@ -53,7 +53,10 @@ const CONFIG = {
         facingMode: "user"
     },
     avatar: {
-        url: "https://cdn.jsdelivr.net/gh/pixiv/three-vrm@dev/packages/three-vrm/examples/models/VRM1_Constraint_Twist_Sample.vrm",
+        // URL principal del modelo VRM
+        url: "https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/VRM1_Constraint_Twist_Sample.vrm",
+        // URL de respaldo en caso de fallo
+        fallbackUrl: "https://raw.githubusercontent.com/pixiv/three-vrm/dev/packages/three-vrm/examples/models/VRM1_Constraint_Twist_Sample.vrm",
         position: [0, -0.5, 0],
         scale: 1.2
     },
@@ -117,21 +120,39 @@ const handFilters = {
     right: {}
 };
 
-// Inicializar filtros de manos
-['Thumb', 'Index', 'Middle', 'Ring', 'Pinky'].forEach(finger => {
-    ['CMC', 'MCP', 'PIP', 'DIP'].forEach(joint => {
-        const key = `${finger}${joint}`;
-        handFilters.left[key] = {
-            x: new EMAFilter(0.3),
-            y: new EMAFilter(0.3),
-            z: new EMAFilter(0.3)
-        };
-        handFilters.right[key] = {
-            x: new EMAFilter(0.3),
-            y: new EMAFilter(0.3),
-            z: new EMAFilter(0.3)
-        };
-    });
+// Inicializar filtros de manos con nombres exactos de Kalidokit (con prefijos)
+const leftHandJoints = [
+    'LeftWrist', 
+    'LeftThumbProximal', 'LeftThumbIntermediate', 'LeftThumbDistal',
+    'LeftIndexProximal', 'LeftIndexIntermediate', 'LeftIndexDistal',
+    'LeftMiddleProximal', 'LeftMiddleIntermediate', 'LeftMiddleDistal',
+    'LeftRingProximal', 'LeftRingIntermediate', 'LeftRingDistal',
+    'LeftLittleProximal', 'LeftLittleIntermediate', 'LeftLittleDistal'
+];
+
+const rightHandJoints = [
+    'RightWrist',
+    'RightThumbProximal', 'RightThumbIntermediate', 'RightThumbDistal',
+    'RightIndexProximal', 'RightIndexIntermediate', 'RightIndexDistal',
+    'RightMiddleProximal', 'RightMiddleIntermediate', 'RightMiddleDistal',
+    'RightRingProximal', 'RightRingIntermediate', 'RightRingDistal',
+    'RightLittleProximal', 'RightLittleIntermediate', 'RightLittleDistal'
+];
+
+leftHandJoints.forEach(joint => {
+    handFilters.left[joint] = {
+        x: new EMAFilter(0.3),
+        y: new EMAFilter(0.3),
+        z: new EMAFilter(0.3)
+    };
+});
+
+rightHandJoints.forEach(joint => {
+    handFilters.right[joint] = {
+        x: new EMAFilter(0.3),
+        y: new EMAFilter(0.3),
+        z: new EMAFilter(0.3)
+    };
 });
 
 // Inicializar aplicación
@@ -248,7 +269,7 @@ async function initializeThreeJS() {
     window.addEventListener('resize', onWindowResize);
 }
 
-// Cargar modelo VRM
+// Cargar modelo VRM con respaldo
 async function loadVRM() {
     return new Promise((resolve, reject) => {
         const loader = new GLTFLoader();
@@ -258,16 +279,26 @@ async function loadVRM() {
             return new VRMLoaderPlugin(parser);
         });
         
-        loader.load(
-            CONFIG.avatar.url,
+        // Función para intentar cargar desde una URL
+        const attemptLoad = (url, isRetry = false) => {
+            console.log(`🔄 ${isRetry ? 'Reintentando' : 'Cargando'} modelo VRM desde: ${url}`);
+            
+            loader.load(
+                url,
             async (gltf) => {
                 try {
+                    console.log("📦 GLTF cargado exitosamente:", gltf);
+                    
                     // Obtener VRM desde el resultado del loader
                     vrm = gltf.userData.vrm;
                     
                     if (!vrm) {
-                        throw new Error("No se pudo cargar el modelo VRM");
+                        console.error("❌ No se encontró VRM en gltf.userData.vrm");
+                        console.log("📋 Contenido de gltf.userData:", gltf.userData);
+                        throw new Error("No se pudo cargar el modelo VRM - modelo no válido");
                     }
+                    
+                    console.log("✅ VRM extraído correctamente:", vrm);
                     
                     // Configurar posición y escala
                     vrm.scene.position.set(...CONFIG.avatar.position);
@@ -283,19 +314,33 @@ async function loadVRM() {
                         Object.keys(expressions).forEach(name => {
                             vrm.expressionManager.setValue(name, 0);
                         });
+                        console.log("🎭 Expresiones disponibles:", Object.keys(expressions));
+                    } else {
+                        console.warn("⚠️ No hay ExpressionManager disponible en este VRM");
                     }
                     
-                    console.log("✅ Avatar VRM cargado:", vrm);
-                    console.log("Expresiones disponibles:", Object.keys(vrm.expressionManager?.expressionMap || {}));
+                    // Limpiar caches para el nuevo avatar
+                    boneCache.clear();
+                    previousRotations.clear();
+                    handBonesValidated = false; // Resetear validación para nuevo avatar
                     
-                    // Debug: Mostrar TODOS los huesos disponibles
+                    // Debug: Mostrar TODOS los huesos disponibles (opcional, comentar para producción)
                     if (vrm.humanoid) {
-                        console.log("🦴 Todos los huesos disponibles:");
+                        console.log("🦴 Sistema humanoid disponible");
                         const bones = vrm.humanoid.humanBones;
-                        Object.keys(bones).forEach(boneName => {
+                        const availableBones = Object.keys(bones).filter(name => bones[name]);
+                        console.log(`📊 ${availableBones.length} huesos disponibles de ${Object.keys(bones).length} posibles`);
+                        
+                        // Mostrar solo algunos huesos importantes
+                        const importantBones = ['head', 'neck', 'leftHand', 'rightHand', 'leftEye', 'rightEye'];
+                        importantBones.forEach(boneName => {
                             console.log(`  ${boneName}: ${bones[boneName] ? '✅' : '❌'}`);
                         });
+                    } else {
+                        console.warn("⚠️ No hay sistema humanoid disponible en este VRM");
                     }
+                    
+                    console.log("✅ Avatar VRM cargado y configurado exitosamente");
                     resolve(vrm);
                     
                 } catch (error) {
@@ -306,12 +351,33 @@ async function loadVRM() {
             (progress) => {
                 const percent = (progress.loaded / progress.total * 100).toFixed(1);
                 showLoading(`Cargando avatar... ${percent}%`);
+                console.log(`📈 Progreso de carga: ${percent}%`);
             },
             (error) => {
-                console.error("❌ Error cargando VRM:", error);
-                reject(error);
+                console.error(`❌ Error cargando VRM desde URL: ${url}`);
+                console.error("📋 Detalles del error:", error);
+                
+                // Información adicional para debugging
+                if (error.status) {
+                    console.error(`🌐 Código de estado HTTP: ${error.status}`);
+                }
+                if (error.message) {
+                    console.error(`💬 Mensaje de error: ${error.message}`);
+                }
+                
+                // Si no es un reintento y hay URL de respaldo, intentar con ella
+                if (!isRetry && CONFIG.avatar.fallbackUrl) {
+                    console.log("🔄 Intentando cargar desde URL de respaldo...");
+                    attemptLoad(CONFIG.avatar.fallbackUrl, true);
+                } else {
+                    reject(new Error(`Error cargando modelo VRM: ${error.message || 'Error desconocido'}`));
+                }
             }
         );
+        };
+        
+        // Comenzar con la URL principal
+        attemptLoad(CONFIG.avatar.url);
     });
 }
 
@@ -496,13 +562,19 @@ function processResults(faceResults, handResults) {
     
     // Procesar manos con Kalidokit
     if (handResults.landmarks && handResults.landmarks.length > 0) {
+        console.log(`👋 Procesando ${handResults.landmarks.length} mano(s) detectada(s)`);
+        
         handResults.landmarks.forEach((landmarks, index) => {
             const handedness = handResults.handednesses[index][0];
             // Mantener la lógica original - el problema era en otro lado
             const isLeft = handedness.categoryName === 'Left';
             
+            console.log(`🔍 Procesando mano ${isLeft ? 'izquierda' : 'derecha'} (${landmarks.length} landmarks)`);
+            
             // Usar Kalidokit Hand.solve
             const rawRiggedHand = Hand.solve(landmarks, isLeft ? "Left" : "Right");
+            console.log(`⚙️ Kalidokit generó:`, Object.keys(rawRiggedHand).length, 'articulaciones para', isLeft ? 'Left' : 'Right');
+            console.log(`📊 Datos Kalidokit ejemplo (primer joint):`, Object.entries(rawRiggedHand)[0]);
             
             // Aplicar filtros de suavizado
             const side = isLeft ? 'left' : 'right';
@@ -522,9 +594,11 @@ function processResults(faceResults, handResults) {
             
             if (isLeft) {
                 riggedLeftHand = filteredHand;
+                console.log(`📤 Llamando animateHand para mano izquierda con ${Object.keys(filteredHand).length} articulaciones`);
                 animateHand(riggedLeftHand, "Left");
             } else {
                 riggedRightHand = filteredHand;
+                console.log(`📤 Llamando animateHand para mano derecha con ${Object.keys(filteredHand).length} articulaciones`);
                 animateHand(riggedRightHand, "Right");
             }
         });
@@ -564,20 +638,20 @@ function animateFace(riggedFace, blendshapes) {
     }
     
     if (normalizedFace.mouth?.shape) {
-        vrm.expressionManager.setValue('aa', Math.max(0, Math.min(1, normalizedFace.mouth.shape.A)));
-        vrm.expressionManager.setValue('ee', Math.max(0, Math.min(1, normalizedFace.mouth.shape.E)));
-        vrm.expressionManager.setValue('ih', Math.max(0, Math.min(1, normalizedFace.mouth.shape.I)));
-        vrm.expressionManager.setValue('oh', Math.max(0, Math.min(1, normalizedFace.mouth.shape.O)));
-        vrm.expressionManager.setValue('ou', Math.max(0, Math.min(1, normalizedFace.mouth.shape.U)));
+        vrm.expressionManager.setValue('aa', Math.max(0, Math.min(1, normalizedFace.mouth.shape.A * ANIMATION_CONFIG.expressionIntensity)));
+        vrm.expressionManager.setValue('ee', Math.max(0, Math.min(1, normalizedFace.mouth.shape.E * ANIMATION_CONFIG.expressionIntensity)));
+        vrm.expressionManager.setValue('ih', Math.max(0, Math.min(1, normalizedFace.mouth.shape.I * ANIMATION_CONFIG.expressionIntensity)));
+        vrm.expressionManager.setValue('oh', Math.max(0, Math.min(1, normalizedFace.mouth.shape.O * ANIMATION_CONFIG.expressionIntensity)));
+        vrm.expressionManager.setValue('ou', Math.max(0, Math.min(1, normalizedFace.mouth.shape.U * ANIMATION_CONFIG.expressionIntensity)));
     }
     
     // Rotación de cabeza
     if (normalizedFace.head && vrm.humanoid) {
         const head = vrm.humanoid.getNormalizedBoneNode('head') || vrm.humanoid.getRawBoneNode('head');
         if (head) {
-            head.rotation.x = -normalizedFace.head.x * CONFIG.animation.headRotationRange;
-            head.rotation.y = -normalizedFace.head.y * CONFIG.animation.headRotationRange;
-            head.rotation.z = normalizedFace.head.z * CONFIG.animation.headRotationRange;
+            head.rotation.x = -normalizedFace.head.x * CONFIG.animation.headRotationRange * ANIMATION_CONFIG.faceSensitivity;
+            head.rotation.y = -normalizedFace.head.y * CONFIG.animation.headRotationRange * ANIMATION_CONFIG.faceSensitivity;
+            head.rotation.z = normalizedFace.head.z * CONFIG.animation.headRotationRange * ANIMATION_CONFIG.faceSensitivity;
         }
         
         const neck = vrm.humanoid.getNormalizedBoneNode('neck') || vrm.humanoid.getRawBoneNode('neck');
@@ -607,87 +681,184 @@ function animateFace(riggedFace, blendshapes) {
     }
 }
 
-// Animar manos con Kalidokit usando huesos VRM estándar
+// Mapeo correcto de Kalidokit (con prefijos Left/Right) a huesos VRM
+const HAND_BONE_MAPPING = {
+    Left: {
+        'LeftWrist': 'leftHand',
+        'LeftThumbProximal': 'leftThumbProximal',
+        'LeftThumbIntermediate': 'leftThumbMetacarpal',
+        'LeftThumbDistal': 'leftThumbDistal',
+        'LeftIndexProximal': 'leftIndexProximal',
+        'LeftIndexIntermediate': 'leftIndexIntermediate',
+        'LeftIndexDistal': 'leftIndexDistal',
+        'LeftMiddleProximal': 'leftMiddleProximal',
+        'LeftMiddleIntermediate': 'leftMiddleIntermediate',
+        'LeftMiddleDistal': 'leftMiddleDistal',
+        'LeftRingProximal': 'leftRingProximal',
+        'LeftRingIntermediate': 'leftRingIntermediate',
+        'LeftRingDistal': 'leftRingDistal',
+        'LeftLittleProximal': 'leftLittleProximal',
+        'LeftLittleIntermediate': 'leftLittleIntermediate',
+        'LeftLittleDistal': 'leftLittleDistal'
+    },
+    Right: {
+        'RightWrist': 'rightHand',
+        'RightThumbProximal': 'rightThumbProximal',
+        'RightThumbIntermediate': 'rightThumbMetacarpal',
+        'RightThumbDistal': 'rightThumbDistal',
+        'RightIndexProximal': 'rightIndexProximal',
+        'RightIndexIntermediate': 'rightIndexIntermediate',
+        'RightIndexDistal': 'rightIndexDistal',
+        'RightMiddleProximal': 'rightMiddleProximal',
+        'RightMiddleIntermediate': 'rightMiddleIntermediate',
+        'RightMiddleDistal': 'rightMiddleDistal',
+        'RightRingProximal': 'rightRingProximal',
+        'RightRingIntermediate': 'rightRingIntermediate',
+        'RightRingDistal': 'rightRingDistal',
+        'RightLittleProximal': 'rightLittleProximal',  
+        'RightLittleIntermediate': 'rightLittleIntermediate',
+        'RightLittleDistal': 'rightLittleDistal'
+    }
+};
+
+// Cache de huesos para evitar búsquedas repetidas
+const boneCache = new Map();
+
+// Cache de rotaciones previas para suavizado
+const previousRotations = new Map();
+
+// Configuración dinámica de animación
+let ANIMATION_CONFIG = {
+    handSmoothingFactor: 0.15,
+    faceSensitivity: 1.0,
+    handRotationMultiplier: 1.0,
+    expressionIntensity: 1.0
+};
+
+// Estado de validación de huesos para evitar verificaciones repetidas
+let handBonesValidated = false;
+
+// Función para validar huesos de manos una sola vez al inicio
+function validateHandBones() {
+    if (handBonesValidated || !vrm?.humanoid) return;
+    
+    const validBones = [];
+    const invalidBones = [];
+    
+    // Validar huesos de ambas manos
+    ['Left', 'Right'].forEach(side => {
+        const mapping = HAND_BONE_MAPPING[side];
+        Object.values(mapping).forEach(vrmBoneName => {
+            const bone = vrm.humanoid.getNormalizedBoneNode(vrmBoneName) || 
+                        vrm.humanoid.getRawBoneNode(vrmBoneName);
+            if (bone) {
+                validBones.push(vrmBoneName);
+                boneCache.set(vrmBoneName, bone); // Pre-cargar cache
+            } else {
+                invalidBones.push(vrmBoneName);
+            }
+        });
+    });
+    
+    console.log(`🦴 Huesos de manos validados: ${validBones.length} válidos, ${invalidBones.length} faltantes`);
+    if (invalidBones.length > 0) {
+        console.warn('❌ Huesos faltantes:', invalidBones);
+    }
+    
+    handBonesValidated = true;
+}
+
+// Función optimizada para animar manos con Kalidokit
 function animateHand(riggedHand, side) {
-    if (!vrm.humanoid || !riggedHand) {
-        console.log(`⚠️ No se puede animar mano ${side}: vrm.humanoid=${!!vrm.humanoid}, riggedHand=${!!riggedHand}`);
+    console.log(`🤲 Animando mano ${side}:`, Object.keys(riggedHand).length, 'articulaciones');
+    
+    // Validación rápida sin logging excesivo
+    if (!vrm?.humanoid || !riggedHand) {
+        console.warn(`❌ Validación falló - VRM: ${!!vrm?.humanoid}, riggedHand: ${!!riggedHand}`);
         return;
     }
     
-    const handPrefix = side === "Left" ? "left" : "right";
-    console.log(`🤲 Animando mano ${side}:`, Object.keys(riggedHand));
+    // Validar huesos una sola vez al inicio
+    if (!handBonesValidated) {
+        validateHandBones();
+    }
     
-    // Mapeo usando nombres exactos del estándar VRM
-    const standardBones = [
-        `${handPrefix}Hand`,
-        `${handPrefix}ThumbMetacarpal`,
-        `${handPrefix}ThumbProximal`,
-        `${handPrefix}ThumbDistal`,
-        `${handPrefix}IndexProximal`, 
-        `${handPrefix}IndexIntermediate`,
-        `${handPrefix}IndexDistal`,
-        `${handPrefix}MiddleProximal`,
-        `${handPrefix}MiddleIntermediate`, 
-        `${handPrefix}MiddleDistal`,
-        `${handPrefix}RingProximal`,
-        `${handPrefix}RingIntermediate`,
-        `${handPrefix}RingDistal`,
-        `${handPrefix}LittleProximal`,
-        `${handPrefix}LittleIntermediate`,
-        `${handPrefix}LittleDistal`
-    ];
+    const mapping = HAND_BONE_MAPPING[side];
+    if (!mapping) {
+        console.warn(`❌ No hay mapeo disponible para lado: ${side}`);
+        return;
+    }
     
-    // Probar cada hueso estándar
-    standardBones.forEach(boneName => {
-        const bone = vrm.humanoid.getNormalizedBoneNode(boneName) || vrm.humanoid.getRawBoneNode(boneName);
-        if (bone) {
-            console.log(`✅ Hueso ${boneName} encontrado y disponible`);
-            
-            // Aplicar una rotación simple de prueba
-            if (riggedHand.Wrist) {
-                bone.rotation.x = riggedHand.Wrist.x || 0;
-                bone.rotation.y = riggedHand.Wrist.y || 0; 
-                bone.rotation.z = riggedHand.Wrist.z || 0;
+    console.log(`🎯 Procesando ${Object.keys(riggedHand).length} articulaciones para ${side}`);
+    
+    let articulacionesProcesadas = 0;
+    let rotacionesAplicadas = 0;
+    
+    // Procesar solo las articulaciones disponibles en riggedHand
+    for (const [kalidokitJoint, rotation] of Object.entries(riggedHand)) {
+        articulacionesProcesadas++;
+        // Validar que la rotación sea válida
+        if (!rotation || typeof rotation !== 'object' || 
+            typeof rotation.x !== 'number' || 
+            typeof rotation.y !== 'number' || 
+            typeof rotation.z !== 'number') {
+            console.warn(`⚠️ Articulación ${kalidokitJoint} tiene datos inválidos:`, rotation);
+            continue;
+        }
+        
+        const vrmBoneName = mapping[kalidokitJoint];
+        if (!vrmBoneName) {
+            console.warn(`⚠️ No hay mapeo VRM para articulación Kalidokit: ${kalidokitJoint}`);
+            continue;
+        }
+        
+        // Usar cache para evitar búsquedas repetidas de huesos
+        let bone = boneCache.get(vrmBoneName);
+        if (!bone) {
+            bone = vrm.humanoid.getNormalizedBoneNode(vrmBoneName) || 
+                   vrm.humanoid.getRawBoneNode(vrmBoneName);
+            if (bone) {
+                boneCache.set(vrmBoneName, bone);
+                console.log(`✅ Hueso encontrado y cacheado: ${vrmBoneName}`);
+            } else {
+                console.warn(`❌ Hueso no encontrado en VRM: ${vrmBoneName}`);
             }
-        } else {
-            console.log(`❌ Hueso ${boneName} no encontrado`);
         }
-    });
-    
-    // Mapeo directo desde Kalidokit a VRM
-    const kalidokitToVRM = {
-        'Wrist': `${handPrefix}Hand`,
-        'RingProximal': `${handPrefix}RingProximal`,
-        'RingIntermediate': `${handPrefix}RingIntermediate`, 
-        'RingDistal': `${handPrefix}RingDistal`,
-        'IndexProximal': `${handPrefix}IndexProximal`,
-        'IndexIntermediate': `${handPrefix}IndexIntermediate`,
-        'IndexDistal': `${handPrefix}IndexDistal`,
-        'MiddleProximal': `${handPrefix}MiddleProximal`,
-        'MiddleIntermediate': `${handPrefix}MiddleIntermediate`,
-        'MiddleDistal': `${handPrefix}MiddleDistal`,
-        'ThumbProximal': `${handPrefix}ThumbProximal`,
-        'ThumbDistal': `${handPrefix}ThumbDistal`,
-        'LittleProximal': `${handPrefix}LittleProximal`,
-        'LittleIntermediate': `${handPrefix}LittleIntermediate`,
-        'LittleDistal': `${handPrefix}LittleDistal`
-    };
-    
-    // Aplicar rotaciones desde Kalidokit
-    Object.entries(riggedHand).forEach(([kalidokitJoint, rotation]) => {
-        if (!rotation || typeof rotation !== 'object') return;
         
-        const vrmBoneName = kalidokitToVRM[kalidokitJoint];
-        if (!vrmBoneName) return;
+        if (!bone) continue;
         
-        const bone = vrm.humanoid.getNormalizedBoneNode(vrmBoneName) || vrm.humanoid.getRawBoneNode(vrmBoneName);
-        if (bone && rotation) {
-            console.log(`🔄 Aplicando rotación a ${vrmBoneName}:`, rotation);
-            bone.rotation.x = THREE.MathUtils.clamp(rotation.x || 0, -1, 1);
-            bone.rotation.y = THREE.MathUtils.clamp(rotation.y || 0, -1, 1);
-            bone.rotation.z = THREE.MathUtils.clamp(rotation.z || 0, -1, 1);
+        // Aplicar suavizado de rotaciones para animaciones más fluidas
+        const rotationKey = `${side}_${vrmBoneName}`;
+        const prevRotation = previousRotations.get(rotationKey);
+        
+        let finalRotation = {
+            x: rotation.x,
+            y: rotation.y,
+            z: rotation.z
+        };
+        
+        if (prevRotation && ANIMATION_CONFIG.handSmoothingFactor > 0) {
+            // Interpolación lineal para suavizado
+            finalRotation.x = THREE.MathUtils.lerp(prevRotation.x, rotation.x, 1 - ANIMATION_CONFIG.handSmoothingFactor);
+            finalRotation.y = THREE.MathUtils.lerp(prevRotation.y, rotation.y, 1 - ANIMATION_CONFIG.handSmoothingFactor);
+            finalRotation.z = THREE.MathUtils.lerp(prevRotation.z, rotation.z, 1 - ANIMATION_CONFIG.handSmoothingFactor);
         }
-    });
+        
+        // Aplicar rotaciones finales con multiplicador (valores en radianes de Kalidokit)
+        bone.rotation.x = finalRotation.x * ANIMATION_CONFIG.handRotationMultiplier;
+        bone.rotation.y = finalRotation.y * ANIMATION_CONFIG.handRotationMultiplier;
+        bone.rotation.z = finalRotation.z * ANIMATION_CONFIG.handRotationMultiplier;
+        
+        rotacionesAplicadas++;
+        
+        // Guardar rotación actual para el próximo frame
+        previousRotations.set(rotationKey, finalRotation);
+        
+        // Forzar actualización de la matriz del hueso
+        bone.updateMatrixWorld(true);
+    }
+    
+    console.log(`✅ ${side}: ${articulacionesProcesadas} articulaciones procesadas, ${rotacionesAplicadas} rotaciones aplicadas`);
 }
 
 // Dibujar landmarks en canvas
@@ -835,6 +1006,64 @@ function updateTrackingStatus(status) {
     trackingStatus.textContent = `Estado: ${status}`;
 }
 
+// Configuración de la interfaz de settings
+function initializeSettingsControls() {
+    const toggleBtn = document.getElementById('toggle-settings');
+    const settingsOverlay = document.getElementById('settings-overlay');
+    
+    // Toggle del panel de configuración
+    if (toggleBtn && settingsOverlay) {
+        toggleBtn.addEventListener('click', () => {
+            const isVisible = settingsOverlay.style.display !== 'none';
+            settingsOverlay.style.display = isVisible ? 'none' : 'block';
+        });
+    }
+    
+    // Control de sensibilidad facial
+    const faceSensitivitySlider = document.getElementById('face-sensitivity');
+    const faceSensitivityValue = document.getElementById('face-sensitivity-value');
+    if (faceSensitivitySlider && faceSensitivityValue) {
+        faceSensitivitySlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            ANIMATION_CONFIG.faceSensitivity = value;
+            faceSensitivityValue.textContent = value.toFixed(1);
+        });
+    }
+    
+    // Control de suavizado de manos
+    const handSmoothingSlider = document.getElementById('hand-smoothing');
+    const handSmoothingValue = document.getElementById('hand-smoothing-value');
+    if (handSmoothingSlider && handSmoothingValue) {
+        handSmoothingSlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            ANIMATION_CONFIG.handSmoothingFactor = value;
+            handSmoothingValue.textContent = value.toFixed(2);
+        });
+    }
+    
+    // Control de multiplicador de rotación de manos
+    const handRotationSlider = document.getElementById('hand-rotation');
+    const handRotationValue = document.getElementById('hand-rotation-value');
+    if (handRotationSlider && handRotationValue) {
+        handRotationSlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            ANIMATION_CONFIG.handRotationMultiplier = value;
+            handRotationValue.textContent = value.toFixed(1);
+        });
+    }
+    
+    // Control de intensidad de expresiones
+    const expressionIntensitySlider = document.getElementById('expression-intensity');
+    const expressionIntensityValue = document.getElementById('expression-intensity-value');
+    if (expressionIntensitySlider && expressionIntensityValue) {
+        expressionIntensitySlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            ANIMATION_CONFIG.expressionIntensity = value;
+            expressionIntensityValue.textContent = value.toFixed(1);
+        });
+    }
+}
+
 // Limpieza al cerrar
 window.addEventListener("beforeunload", () => {
     if (webcamRunning) {
@@ -844,6 +1073,11 @@ window.addEventListener("beforeunload", () => {
     if (renderer) {
         renderer.dispose();
     }
+});
+
+// Inicializar controles de configuración cuando se carga la página
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSettingsControls();
 });
 
 // Inicializar cuando el DOM esté listo

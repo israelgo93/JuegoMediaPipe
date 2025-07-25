@@ -133,6 +133,89 @@
             font-size: 12px;
         }
         
+        .settings-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+        }
+        
+        .settings-group {
+            margin-bottom: 15px;
+        }
+        
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .settings-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+        
+        .settings-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .settings-slider {
+            flex: 1;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .settings-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #007acc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .settings-value {
+            font-family: monospace;
+            font-size: 11px;
+            min-width: 35px;
+            text-align: right;
+            color: #007acc;
+        }
+        
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #007acc;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            z-index: 11;
+            transition: all 0.2s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: rgba(0, 123, 204, 0.2);
+        }
+        
         .loading-indicator {
             position: absolute;
             top: 50%;
@@ -202,6 +285,44 @@
             <div id="fps-counter">FPS: --</div>
             <div id="latency-counter">Latencia: -- ms</div>
             <div id="tracking-status">Estado: Detenido</div>
+        </div>
+    </div>
+    
+    <!-- Botón para mostrar/ocultar configuración -->
+    <button id="toggle-settings" class="toggle-btn">⚙️ Config</button>
+    
+    <!-- Panel de configuración -->
+    <div id="settings-overlay" class="settings-overlay" style="display: none;">
+        <div class="settings-group">
+            <label class="settings-label">SENSIBILIDAD FACIAL</label>
+            <div class="settings-control">
+                <input type="range" id="face-sensitivity" class="settings-slider" min="0.1" max="2.0" step="0.1" value="1.0">
+                <span id="face-sensitivity-value" class="settings-value">1.0</span>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <label class="settings-label">SUAVIZADO MANOS</label>
+            <div class="settings-control">
+                <input type="range" id="hand-smoothing" class="settings-slider" min="0.0" max="0.5" step="0.05" value="0.15">
+                <span id="hand-smoothing-value" class="settings-value">0.15</span>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <label class="settings-label">ROTACIÓN MANOS</label>
+            <div class="settings-control">
+                <input type="range" id="hand-rotation" class="settings-slider" min="0.5" max="1.5" step="0.1" value="1.0">
+                <span id="hand-rotation-value" class="settings-value">1.0</span>
+            </div>
+        </div>
+        
+        <div class="settings-group">
+            <label class="settings-label">EXPRESIONES</label>
+            <div class="settings-control">
+                <input type="range" id="expression-intensity" class="settings-slider" min="0.3" max="1.5" step="0.1" value="1.0">
+                <span id="expression-intensity-value" class="settings-value">1.0</span>
+            </div>
         </div>
     </div>
     

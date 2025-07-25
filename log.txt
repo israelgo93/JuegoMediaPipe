@@ -1,0 +1,208 @@
+Inicializando MediaPipe Avatar VRM Fullscreen...
+VM275 vision_wasm_internal.js:9 W0725 03:36:31.405000 1880752 face_landmarker_graph.cc:180] Sets FaceBlendshapesGraph acceleration to xnnpack by default.
+
+VM275 vision_wasm_internal.js:9 I0725 03:36:31.539000 1880752 gl_context.cc:374] GL version: 3.0 (OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))), renderer: WebKit WebGL
+VM275 vision_wasm_internal.js:9 W0725 03:36:31.541000 1880752 gl_context.cc:1060] OpenGL error checking is disabled
+VM275 vision_wasm_internal.js:9 Graph successfully started running.
+vision_wasm_internal.js:9 I0725 03:36:32.074000 1880752 gl_context.cc:374] GL version: 3.0 (OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))), renderer: WebKit WebGL
+vision_wasm_internal.js:9 W0725 03:36:32.076000 1880752 gl_context.cc:1060] OpenGL error checking is disabled
+vision_wasm_internal.js:9 Graph successfully started running.
+main.js:284 🔄 Cargando modelo VRM desde: https://pixiv.github.io/three-vrm/packages/three-vrm/examples/models/VRM1_Constraint_Twist_Sample.vrm
+main.js:354 📈 Progreso de carga: 0.9%
+main.js:354 📈 Progreso de carga: 2.9%
+main.js:354 📈 Progreso de carga: 3.5%
+main.js:354 📈 Progreso de carga: 3.9%
+main.js:354 📈 Progreso de carga: 4.4%
+3
+main.js:354 📈 Progreso de carga: 5.1%
+main.js:354 📈 Progreso de carga: 5.5%
+main.js:354 📈 Progreso de carga: 5.9%
+main.js:354 📈 Progreso de carga: 6.1%
+main.js:354 📈 Progreso de carga: 6.5%
+main.js:354 📈 Progreso de carga: 6.8%
+main.js:354 📈 Progreso de carga: 7.3%
+main.js:354 📈 Progreso de carga: 8.1%
+main.js:354 📈 Progreso de carga: 9.0%
+main.js:354 📈 Progreso de carga: 9.1%
+main.js:354 📈 Progreso de carga: 9.7%
+main.js:354 📈 Progreso de carga: 10.3%
+main.js:354 📈 Progreso de carga: 10.8%
+main.js:354 📈 Progreso de carga: 11.2%
+main.js:354 📈 Progreso de carga: 12.1%
+main.js:354 📈 Progreso de carga: 12.2%
+main.js:354 📈 Progreso de carga: 13.1%
+main.js:354 📈 Progreso de carga: 14.4%
+main.js:354 📈 Progreso de carga: 15.3%
+main.js:354 📈 Progreso de carga: 16.2%
+main.js:354 📈 Progreso de carga: 17.1%
+main.js:354 📈 Progreso de carga: 18.0%
+main.js:354 📈 Progreso de carga: 18.9%
+main.js:354 📈 Progreso de carga: 21.7%
+main.js:354 📈 Progreso de carga: 22.4%
+main.js:354 📈 Progreso de carga: 22.9%
+main.js:354 📈 Progreso de carga: 23.3%
+main.js:354 📈 Progreso de carga: 23.7%
+main.js:354 📈 Progreso de carga: 24.3%
+main.js:354 📈 Progreso de carga: 25.2%
+main.js:354 📈 Progreso de carga: 25.6%
+main.js:354 📈 Progreso de carga: 26.5%
+2
+main.js:354 📈 Progreso de carga: 28.8%
+main.js:354 📈 Progreso de carga: 29.2%
+main.js:354 📈 Progreso de carga: 29.5%
+main.js:354 📈 Progreso de carga: 29.8%
+main.js:354 📈 Progreso de carga: 30.7%
+main.js:354 📈 Progreso de carga: 30.9%
+main.js:354 📈 Progreso de carga: 31.3%
+main.js:354 📈 Progreso de carga: 31.7%
+main.js:354 📈 Progreso de carga: 32.6%
+main.js:354 📈 Progreso de carga: 32.9%
+2
+main.js:354 📈 Progreso de carga: 33.5%
+main.js:354 📈 Progreso de carga: 33.9%
+main.js:354 📈 Progreso de carga: 34.2%
+main.js:354 📈 Progreso de carga: 34.6%
+main.js:354 📈 Progreso de carga: 36.4%
+main.js:354 📈 Progreso de carga: 42.0%
+main.js:354 📈 Progreso de carga: 42.9%
+main.js:354 📈 Progreso de carga: 45.1%
+main.js:354 📈 Progreso de carga: 46.0%
+main.js:354 📈 Progreso de carga: 47.8%
+main.js:354 📈 Progreso de carga: 48.4%
+main.js:354 📈 Progreso de carga: 49.3%
+main.js:354 📈 Progreso de carga: 50.3%
+2
+main.js:354 📈 Progreso de carga: 51.2%
+main.js:354 📈 Progreso de carga: 52.2%
+main.js:354 📈 Progreso de carga: 52.6%
+main.js:354 📈 Progreso de carga: 52.9%
+main.js:354 📈 Progreso de carga: 53.3%
+main.js:354 📈 Progreso de carga: 53.6%
+main.js:354 📈 Progreso de carga: 53.9%
+main.js:354 📈 Progreso de carga: 54.3%
+main.js:354 📈 Progreso de carga: 54.6%
+main.js:354 📈 Progreso de carga: 54.8%
+main.js:354 📈 Progreso de carga: 55.1%
+main.js:354 📈 Progreso de carga: 55.3%
+main.js:354 📈 Progreso de carga: 55.6%
+main.js:354 📈 Progreso de carga: 55.8%
+main.js:354 📈 Progreso de carga: 56.0%
+main.js:354 📈 Progreso de carga: 56.3%
+main.js:354 📈 Progreso de carga: 56.5%
+main.js:354 📈 Progreso de carga: 57.3%
+main.js:354 📈 Progreso de carga: 57.7%
+main.js:354 📈 Progreso de carga: 58.6%
+main.js:354 📈 Progreso de carga: 59.4%
+2
+main.js:354 📈 Progreso de carga: 60.3%
+main.js:354 📈 Progreso de carga: 61.2%
+main.js:354 📈 Progreso de carga: 62.1%
+main.js:354 📈 Progreso de carga: 62.6%
+main.js:354 📈 Progreso de carga: 62.8%
+main.js:354 📈 Progreso de carga: 63.0%
+main.js:354 📈 Progreso de carga: 63.3%
+main.js:354 📈 Progreso de carga: 63.5%
+﻿
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]
+main.js:597 📤 Llamando animateHand para mano izquierda con 16 articulaciones
+main.js:773 🤲 Animando mano Left: 16 articulaciones
+main.js:792 🎯 Procesando 16 articulaciones para Left
+main.js:861 ✅ Left: 16 articulaciones procesadas, 16 rotaciones aplicadas
+main.js:565 👋 Procesando 1 mano(s) detectada(s)
+main.js:572 🔍 Procesando mano izquierda (21 landmarks)
+main.js:576 ⚙️ Kalidokit generó: 16 articulaciones para Left
+main.js:577 📊 Datos Kalidokit ejemplo (primer joint): 
+(2) ['LeftWrist', {…}]

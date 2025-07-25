@@ -5,7 +5,15 @@
       "Bash(magick:*)",
       "Bash(npm install:*)",
       "Bash(mkdir:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c:*)",
+      "Bash(powershell:*)",
+      "Bash(wmic process where:*)",
+      "WebFetch(domain:pixiv.github.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": []
   }
